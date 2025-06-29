@@ -1,97 +1,90 @@
-# 🛰️ Geoglyph Detection Pipeline
+# Glyph Cartographer - A Geoglyph Detection Pipeline
 
-## ⚡ Quick Start (with Makefile)
+A full-stack application for detecting ancient Amazonian geoglyphs using satellite imagery and deep learning.
 
-```bash
-make setup-data   # Install, configure, download tiles, and create dataset
-make train         # Train using all patch sizes in config
+## Prerequisites
+
+- Node.js (v14+)
+- Python (3.8+)
+- Conda
+- pnpm
+- Google Maps API key
+- OpenAI API key (optional, for AI-assisted predictions)
+
+## Quick Start
+
+### 1. Clone and Setup Environment
+
+Clone the repository:
+```shell
+git clone https://github.com/mvrcii/glyph_cartographer.git
+cd glyph_cartographer
 ```
 
-Other useful commands:
-
-```bash
-make inspect-512      # Visualize 512×512 patches
-make check-masks-256  # Check mask coverage for 256×256
-make test             # Run installation test
+Create and activate conda environment:
+```shell
+conda create -n glyph_cartographer python=3.12 -y
+conda activate glyph_cartographer
 ```
 
----
+### 2. Configure API Keys
 
-## 🛠️ Manual Setup
-
-```bash
-# (Optional) Create conda env
-conda create -n glyph python=3.12.2 -y && conda activate glyph
-
-# Install dependencies
-pip install -e .
-
-# Set up API key in .env
-python scripts/utils/setup_api_key.py
-
-# Test installation
-python scripts/utils/test_installation.py
+Copy the example environment file:
+```shell
+cp packages/backend/.env.example packages/backend/.env
 ```
 
----
+Edit the `.env` file and add your API keys:
+- GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+- OPENAI_API_KEY=your_openai_api_key 
 
-## 🗺️ Download Tile Data
+### 3. Install Dependencies
 
-### Option A: Google Maps Tiles API via KML
-```bash
-# Preprocess KML (already pushed)
-python scripts/download/preprocess_initial_kml.py
-
-# Download tiles from KML
-tile_download --kml data/kml_files/geoglyphs.kml --zoom 17 --max-parallel 5
-
-# [Optional] Estimate API calls
-python scripts/download/calculate_tiles_to_download_from_kml.py data/kml_files/geoglyphs.kml --zoom 17
+Install all dependencies (Python + Node.js):
+```shell
+pnpm setup
 ```
 
-### Option B: Download Pre-generated Tiles
-```bash
-gdown https://drive.google.com/uc?id=18UbZl38cP4N-nw0hiNkJPnWCV84-RV2e -O data/tiles.tar.gz
-tar -xzvf data/tiles.tar.gz
+### 4. Create Google Maps Session Token
+
+Generate session token for Google Maps API:
+```shell
+pnpm create-session
 ```
 
----
+Enter your Google Maps API key when prompted.
 
-## 📦 Dataset Preparation
+### 5. Start the Application
 
-```bash
-# Create dataset at multiple scales (512, 256, 128)
-python scripts/dataset/create_dataset_kml.py configs/base_kml.py
-
-# [Optional] Visual tools
-python scripts/dataset/inspect_patches.py --root data/datasets/multiscale --patch-size 512 -n 16
-python scripts/dataset/check_masks.py --patch-size 256
+Start both frontend and backend servers:
+```shell
+pnpm dev
 ```
 
----
 
-## 🧠 Training
+The application will be available at:
+- Frontend: http://localhost:5173
+- Backend API: https://localhost:5000/api
 
-```bash
-python scripts/train.py configs/base_kml.py
-```
+## What's Included
 
-The config handles training across all patch sizes.
+- **Frontend**: React + TypeScript map interface for tile selection, inference, and labeling
+- **Backend**: Node.js API server with Python inference service
+- **ML Pipeline**: Segformer-based deep learning models for geoglyph detection
+- **Tools**: Dataset creation, model training, and validation utilities
 
+## Key Features
 
+- Download satellite tiles from Google Maps
+- Run ML inference on selected tiles
+- Manual labeling interface for training data
+- AI-assisted prediction filtering (requires OpenAI API)
+- Multi-scale training pipeline
+- Real-time visualization of predictions
 
-# Slippy Map Application
-1. Navigate to frontend: `cd src/frontend`
-2. Install dependencies: `pnpm install`
-3. Start dev server `pnpm run dev`
+## Troubleshooting
 
-
-
-
-### Generate a Self-Signed Certificate for Development
-In your terminal, from the 'packages/backend' directory:
-```bash
-openssl req -x509 -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' \
-  -keyout localhost-privkey.pem -out localhost-cert.pem
-```
-This will create two files: localhost-privkey.pem (your private key) and localhost-cert.pem (your certificate).
+- Ensure all API keys are correctly set in the `.env` file
+- The backend generates self-signed certificates automatically for HTTPS
+- If port conflicts occur, check the `.env` file to modify default ports
+- For detailed logs, check the console output of both frontend and backend servers
