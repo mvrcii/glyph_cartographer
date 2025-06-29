@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure full height inheritance */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@layer components {
+    .btn {
+        @apply h-10 px-2 rounded-lg flex items-center justify-center transition-colors focus:outline-none border-2;
+    }
+
+    .btn-icon {
+        @apply w-10 h-10 p-0 rounded-lg flex items-center justify-center transition-colors focus:outline-none border-2;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+/* Rectangle tool tooltip */
+.leaflet-tooltip.rect-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: none;
+    padding: 8px 8px;
+    border-radius: 4px;
+    left: 8px;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+/* Suppress default focus outline that appears after key shortcuts */
+.leaflet-container:focus {
+    outline: none;
+}
+
+@layer utilities {
+    .animate-slide-out {
+        animation: slide-out 0.3s ease-in forwards;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+}
+
+.rect-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rect-tooltip::before {
+    border-right-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Fix Leaflet rectangle animation in canvas renderer */
+.leaflet-canvas-layer .animate-pulse {
+    animation: none; /* Canvas doesn't support CSS animations */
+}
+
+/* Improve canvas rendering performance */
+.leaflet-container canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.fixed-right {
+    width: 88px;
+}
+
+/* Custom range slider thumb */
+.slider-thumb-sm::-webkit-slider-thumb {
+    width: 12px; /* Custom width */
+    height: 12px; /* Custom height */
+}
+
+.slider-thumb-sm::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none; /* Needed for Firefox */
+}

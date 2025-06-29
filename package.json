@@ -1,0 +1,19 @@
+{
+  "name": "tile-map-project-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tile map viewer with download capabilities",
+  "scripts": {
+    "setup": "pnpm install && pip install -e .",
+    "dev": "pnpm --parallel dev",
+    "build": "pnpm --filter frontend build",
+    "start": "pnpm --filter backend start",
+    "create-session": "python scripts/utils/create_session.py"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "spdy": "^4.0.2"
+  }
+}
